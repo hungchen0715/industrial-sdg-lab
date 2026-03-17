@@ -19,6 +19,7 @@ from randomizer import generate_variants
 from dataset_export import export_coco_dataset, create_dataset_manifest
 from preview import render_comparison, render_multi_variant_grid, render_lighting_comparison, render_scene_topdown
 from viewer_3d import get_viewer_iframe
+from viewer_ov import get_ov_viewport_iframe
 
 
 def ensure_sample_scene() -> str:
@@ -127,7 +128,7 @@ def process(
             log_lines.append(f"    ... and {len(variants) - 5} more")
     except Exception as e:
         log_lines.append(f"  Generation failed: {e}")
-        return "", "", "", None, None, None, None, "", "\n".join(log_lines)
+        return "", "", "", "", None, None, None, None, "", "\n".join(log_lines)
 
     # ── Step 4: Export COCO ──
     log_lines.append("")
@@ -198,6 +199,15 @@ def process(
     except Exception as e:
         log_lines.append(f"  3D viewport failed: {e}")
 
+    # 5f: Omniverse-style viewport
+    ov_viewport_html = ""
+    try:
+        if variants:
+            ov_viewport_html = get_ov_viewport_iframe(variants[0].scene_path, height=600)
+            log_lines.append(f"  OV viewport: OK (port 7864)")
+    except Exception as e:
+        log_lines.append(f"  OV viewport failed: {e}")
+
     # ── Step 6: Read sample USDA ──
     log_lines.append("")
     log_lines.append("=" * 55)
@@ -239,6 +249,7 @@ def process(
         summary,                # summary_output
         coco_json_str,          # coco_output
         viewport_html,          # viewport_output
+        ov_viewport_html,       # ov_viewport_output
         comparison_path,        # dist_output
         grid_path,              # grid_output
         lighting_path,          # lighting_output
@@ -325,6 +336,12 @@ with gr.Blocks(
                 label="3D Scene Viewport",
             )
 
+        with gr.Tab("🌟 Omniverse Viewport"):
+            gr.Markdown("*Premium RTX-style viewport with post-processing, bloom, and property inspector*")
+            ov_viewport_output = gr.HTML(
+                label="Omniverse-Style Viewport",
+            )
+
         with gr.Tab("📊 Parameter Distributions"):
             dist_output = gr.Image(
                 label="Randomization Parameter Distributions",
@@ -383,6 +400,7 @@ with gr.Blocks(
             summary_output,
             coco_output,
             viewport_output,
+            ov_viewport_output,
             dist_output,
             grid_output,
             lighting_output,
