@@ -18,6 +18,7 @@ from usd_writer import create_sample_battery_scene, parse_usda
 from randomizer import generate_variants
 from dataset_export import export_coco_dataset, create_dataset_manifest
 from preview import render_comparison, render_multi_variant_grid, render_lighting_comparison, render_scene_topdown
+from viewer_3d import generate_viewport_html
 
 
 def ensure_sample_scene() -> str:
@@ -126,7 +127,7 @@ def process(
             log_lines.append(f"    ... and {len(variants) - 5} more")
     except Exception as e:
         log_lines.append(f"  Generation failed: {e}")
-        return "", "", None, None, None, None, "", "\n".join(log_lines)
+        return "", "", "", None, None, None, None, "", "\n".join(log_lines)
 
     # ── Step 4: Export COCO ──
     log_lines.append("")
@@ -188,6 +189,15 @@ def process(
     except Exception as e:
         log_lines.append(f"  Topdown view failed: {e}")
 
+    # 5e: 3D viewport
+    viewport_html = ""
+    try:
+        if variants:
+            viewport_html = generate_viewport_html(variants[0].scene_path, height=500)
+            log_lines.append(f"  3D viewport: OK")
+    except Exception as e:
+        log_lines.append(f"  3D viewport failed: {e}")
+
     # ── Step 6: Read sample USDA ──
     log_lines.append("")
     log_lines.append("=" * 55)
@@ -228,6 +238,7 @@ def process(
     return (
         summary,                # summary_output
         coco_json_str,          # coco_output
+        viewport_html,          # viewport_output
         comparison_path,        # dist_output
         grid_path,              # grid_output
         lighting_path,          # lighting_output
@@ -308,6 +319,12 @@ with gr.Blocks(
 
     # ── Visual Outputs in Tabs ──
     with gr.Tabs():
+        with gr.Tab("🧊 3D Viewport"):
+            gr.Markdown("*Interactive 3D view — drag to rotate, scroll to zoom*")
+            viewport_output = gr.HTML(
+                label="3D Scene Viewport",
+            )
+
         with gr.Tab("📊 Parameter Distributions"):
             dist_output = gr.Image(
                 label="Randomization Parameter Distributions",
@@ -365,6 +382,7 @@ with gr.Blocks(
         outputs=[
             summary_output,
             coco_output,
+            viewport_output,
             dist_output,
             grid_output,
             lighting_output,
