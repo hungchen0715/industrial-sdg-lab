@@ -1,79 +1,60 @@
 # 🏭 Industrial Synthetic Data Generation Lab
 
-**Domain Randomization for Industrial AI Training Data**
+> **In one line:** Automatically generate diverse training data from a single 3D industrial scene (.usda) for AI vision models.
 
-Generate diverse synthetic datasets from USD scenes to train robust
-computer vision models for manufacturing quality inspection.
+---
+
+## What Does This Do?
+
+Training AI for factory quality inspection (e.g., detecting misaligned battery cells) requires **thousands of labeled images**. Manual photography + annotation is too slow.
+
+This tool's approach:
+
+```
+One 3D scene → automatically vary lighting/materials/camera/poses → N different annotated datasets
+```
 
 ![Architecture](assets/architecture.png)
 
-**What it does:**
-- **Load a USD scene** (battery module, assembly line, etc.)
-- **Domain Randomization** — lighting, materials, camera, object pose
-- **COCO dataset export** — ready for YOLOv8 / Detectron2 / MMDetection
-- **Distribution visualization** — see exactly what was randomized
+### Core Pipeline
 
-### Randomization Distribution Preview
+| Step | What | Module |
+|:---:|:---|:---|
+| 1️⃣ | Load a USD scene (battery module) | `usd_writer.py` |
+| 2️⃣ | Randomize 4 domains | `randomizer.py` |
+| 3️⃣ | Export COCO-format annotations | `dataset_export.py` |
+| 4️⃣ | Visualize & verify results | `preview.py` |
 
-![Distributions](assets/preview_distributions.png)
+### 4 Domains of Randomization
 
-### Scene Top-Down View (single variant)
-
-![Topdown](assets/preview_topdown.png)
-
----
-
-## Part of the Industrial AI Toolchain
-
-```
-┌──────────────────────────────┐     ┌──────────────────────────────┐
-│   spec-to-sim-copilot        │     │    industrial-sdg-lab        │
-│   ────────────────────       │     │    ──────────────────        │
-│   「Upstream: Scene Build」   │ ──► │   「Downstream: Data Gen」   │
-│                              │.usda│                              │
-│  Prompt → LLM → Validator    │     │  USD → Domain Rand.          │
-│  → Repair Loop → USD Scene   │     │  → Annotations → COCO        │
-└──────────────────────────────┘     └──────────────────────────────┘
-```
-
-**spec-to-sim-copilot** generates validated USD scenes from natural language.  
-**industrial-sdg-lab** takes those scenes and produces training data at scale.
+| Domain | What Changes | Why |
+|:---|:---|:---|
+| 💡 **Lighting** | Intensity 500–3000 lux | Factory brightness varies by shift/weather |
+| 🎨 **Materials** | Color shift ±8% | Batch-to-batch cell casing variation |
+| 📷 **Camera** | Position ±10cm, FOV 50–75° | Sensor mounting tolerance |
+| 🔩 **Object Pose** | Position ±3mm, rotation ±2° | Robot gripper placement accuracy |
 
 ---
 
-## Architecture
+## Demo Screenshots
 
-```
-Input .usda scene
-    ↓
-Pure-text USDA Parser (no pxr dependency)
-    ↓
-Domain Randomization Engine
-    ├── 💡 Lighting (intensity, color temperature)
-    ├── 🎨 Materials (hue shift, saturation, roughness)
-    ├── 📷 Camera (position jitter, FOV variation)
-    └── 🔩 Object Pose (position/rotation micro-perturbation)
-    ↓
-N randomized .usda variants (each with ground-truth metadata)
-    ↓
-COCO Dataset Exporter
-    ├── 3D → 2D projection (pinhole camera model)
-    ├── Bounding box computation
-    └── annotations.json (COCO format)
-```
+### 🧊 3D Viewport — Interactive Scene Preview
 
-### Randomization Parameters
+Drag to rotate, scroll to zoom:
 
-| Domain | Parameter | Default Range | Why |
-|:---|:---|:---|:---|
-| **Lighting** | Intensity | 500–3000 lux | Factory lighting varies by shift, weather |
-| **Lighting** | Color | Warm–Daylight | Different lamp types (LED, fluorescent) |
-| **Materials** | Hue Shift | ±0.08 | Batch color variation in cell casings |
-| **Materials** | Saturation | 0.7–1.3× | Surface wear and aging |
-| **Camera** | Position | ±10cm | Sensor mounting tolerance |
-| **Camera** | FOV | 50–75° | Different lens configurations |
-| **Object Pose** | Position | ±3mm | Real placement inaccuracy |
-| **Object Pose** | Rotation | ±2° | Gripper alignment tolerance |
+![3D Demo](assets/demo_topdown.png)
+
+### 📊 Randomization Distributions — Verify each domain varies
+
+![Distributions](assets/demo_distributions.png)
+
+### 🔲 Multi-Variant Grid — Cell positions differ across variants
+
+![Variant Grid](assets/demo_variant_grid.png)
+
+### 💡 Lighting Comparison — Color temperature and intensity
+
+![Lighting](assets/demo_lighting.png)
 
 ---
 
@@ -81,18 +62,13 @@ COCO Dataset Exporter
 
 ```bash
 pip install -r requirements.txt
-
-# Run the interactive UI
 python app.py
+# Open http://localhost:7862
 ```
 
-Then open `http://localhost:7862` in your browser.
+Click **🚀 Generate & Export** to run the full pipeline.
 
-A sample battery module scene is created automatically on first run.
-
----
-
-## CLI Usage
+### Python API
 
 ```python
 from schema import SDGConfig
@@ -100,97 +76,62 @@ from usd_writer import create_sample_battery_scene
 from randomizer import generate_variants
 from dataset_export import export_coco_dataset
 
-# Create sample scene
-scene_path = create_sample_battery_scene()
-
-# Configure
-config = SDGConfig(
-    scene_path=scene_path,
-    num_variants=50,
-    seed=42,
-)
-
-# Generate
+scene = create_sample_battery_scene()
+config = SDGConfig(scene_path=scene, num_variants=50, seed=42)
 variants = generate_variants(config)
-
-# Export
-export_coco_dataset(variants, "outputs")
-# → outputs/annotations.json (COCO format)
+export_coco_dataset(variants, "outputs")  # → COCO annotations.json
 ```
 
 ---
 
-## Technical Trade-offs (Builder's Notes)
+## Part of the Industrial AI Toolchain
 
-### Why USD instead of JSON?
-USD supports **Layering** — randomization results can be overlaid as sublayers
-on the original scene without destroying source data. This is the same
-architecture NVIDIA Omniverse uses for collaborative scene editing.
+This project is the **downstream half** of a two-project toolchain:
 
-### Why pure-text USDA instead of pxr SDK?
-The OpenUSD Python binding (`pxr`) requires a platform-specific build from
-NVIDIA or Pixar, with 500MB+ of C++ dependencies. For domain randomization
-(modifying attribute values), regex-based text manipulation on `.usda` files
-is functionally equivalent and **zero-dependency**.
+```
+spec-to-sim-copilot              industrial-sdg-lab
+(Upstream: Scene Generation)     (Downstream: Data Generation)
 
-### Why Domain Randomization?
-The **Sim-to-Real Gap** is the #1 failure mode when deploying vision models
-trained on synthetic data. Domain Randomization forces the model to be
-invariant to visual properties that vary in the real world (lighting, color,
-viewpoint). This is cheaper and more scalable than photorealistic rendering.
+Natural Language → LLM → Validate   USD Scene → Randomize
+→ Self-Repair Loop → .usda    →→→   → COCO Annotations → AI Training
+```
 
-Reference: Tobin et al., *"Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World"* (2017).
+---
 
-### Why COCO format?
-It's the de facto standard. Every major detection framework supports it natively:
-YOLOv8, Detectron2, MMDetection, TensorFlow Object Detection API.
+## Technical Decisions
 
-### Why separate from spec-to-sim-copilot?
-**Single Responsibility.** Scene generation (LLM + validation) is a fundamentally
-different problem from data augmentation (randomization + annotation). Separating
-them allows independent deployment, testing, and iteration.
+| Decision | Rationale |
+|:---|:---|
+| **Pure-text USDA** instead of pxr SDK | pxr requires 500MB+ C++ build; regex suffices for attribute modification |
+| **Domain Randomization** instead of photorealistic rendering | Cheaper, faster, equally effective (Tobin et al. 2017) |
+| **COCO format** | Natively supported by YOLOv8 / Detectron2 / MMDetection |
+| **GLB 3D preview** | Gradio's native Model3D component + trimesh for export |
+
+## Limitations
+
+- No actual rendering (would require Isaac Sim / Omniverse)
+- Simplified pinhole projection, no lens distortion
+- USDA text format only (.usd/.usdc not supported)
 
 ---
 
 ## Project Structure
 
 ```
-industrial-sdg-lab/
 ├── app.py              — Gradio UI (port 7862)
-├── schema.py           — Pydantic models (SDGConfig, RandomizationStrategy)
-├── config.py           — Parameter ranges and COCO category definitions
-├── usd_writer.py       — Pure-text USDA parser/writer (no pxr dependency)
+├── schema.py           — Pydantic data models
+├── config.py           — Parameter configuration
+├── usd_writer.py       — Pure-text USDA parser/writer
 ├── randomizer.py       — Domain Randomization engine (4 domains)
-├── dataset_export.py   — COCO-format annotation exporter
-├── preview.py          — Randomization distribution visualization
+├── dataset_export.py   — COCO annotation exporter
+├── preview.py          — Distribution visualization
+├── viewer_3d.py        — USDA → GLB scene converter
 ├── test_pipeline.py    — Integration tests (30 checks)
-├── sample_scenes/      — Example USD scenes (.usda)
-├── sample_outputs/     — Pre-generated COCO annotations + manifest
 ├── examples/           — Usage examples
-│   └── basic_randomization.py
-├── assets/             — Architecture diagram + preview images
-├── requirements.txt
-├── LICENSE             — MIT
-└── .gitignore
+├── sample_scenes/      — Example USD scenes
+├── sample_outputs/     — Pre-generated COCO samples
+└── assets/             — Demo screenshots
 ```
-
----
-
-## Limitations
-
-- **No actual rendering** — generates scene variants + projected annotations,
-  not rendered images (would require Isaac Sim / Omniverse)
-- **Simplified projection** — pinhole camera, no lens distortion
-- **USDA only** — binary `.usd` / `.usdc` formats not supported
-- **No physics simulation** — object poses are perturbed randomly, not
-  physically simulated
-- **Single scene type** — optimized for battery module assembly scenes
-
-These are deliberate scope boundaries. The point is to demonstrate the
-**domain randomization → COCO pipeline pattern**, not to replace
-NVIDIA Isaac Sim Replicator.
-
----
 
 ## License
 

@@ -23,11 +23,10 @@ env/
 .DS_Store
 Thumbs.db
 
-# Project outputs
+# Generated outputs (runtime)
 outputs/
-*.png
-!assets/*.png
 
 # Temp
 *.tmp
 *.bak
+*.glb
