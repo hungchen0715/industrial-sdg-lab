@@ -38,14 +38,14 @@ One 3D scene → automatically vary lighting/materials/camera/poses → N differ
 
 ## Demo Screenshots
 
-### 🧊 Interactive 3D Viewport (in Gradio App)
+### 🌟 Omniverse-Style 3D Viewport
 
-The Gradio app includes a **real-time 3D viewer** where you can drag to rotate and scroll to zoom.
-It renders cells, tray, robot base, and camera as colored geometry from the USDA scene data.
+The app includes an **Omniverse-style interactive 3D viewport** with PBR materials, bloom post-processing,
+scene hierarchy panel, and property inspector. Cells are labeled G1–G4 / B1 / O1 with visible terminal connectors, bus bars, and tray dividers.
 
-![3D Viewport](assets/demo_3d_viewport.png)
+![Omniverse Viewport](assets/demo_3d_viewport.png)
 
-> Run `python app.py` and click **Generate & Export** → **3D Viewport** tab to try it.
+> Run `python app.py` → click **Generate & Export** → **🌟 Omniverse Viewport** tab
 
 ### 🗺️ Scene Layout — Top-Down View
 

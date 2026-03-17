@@ -490,9 +490,10 @@ function createLabel(text, className = '') {{
 }}
 
 // ── Create Objects ──
+const cellObjs = objects.filter(o => o.type === 'cell');
 objects.forEach((obj, idx) => {{
   if (obj.type === 'cell') {{
-    const geo = new RoundedBoxGeometry(obj.scale[0], obj.scale[1], obj.scale[2], 3, 0.006);
+    const geo = new RoundedBoxGeometry(obj.scale[0], obj.scale[1], obj.scale[2], 3, 0.004);
     const mat = new THREE.MeshPhysicalMaterial({{
       color: obj.color, roughness: 0.25, metalness: 0.12,
       clearcoat: 0.4, clearcoatRoughness: 0.15,
@@ -503,9 +504,26 @@ objects.forEach((obj, idx) => {{
     mesh.userData = {{ idx, ...obj }};
     scene.add(mesh); interactables.push(mesh);
 
-    // Cell label
+    // Cell label on top
     const label = createLabel(obj.label);
-    labelData.push({{ el: label, pos: new THREE.Vector3(obj.position[0], obj.position[1] + obj.scale[1]/2 + 0.03, obj.position[2]) }});
+    labelData.push({{ el: label, pos: new THREE.Vector3(obj.position[0], obj.position[1] + obj.scale[1]/2 + 0.025, obj.position[2]) }});
+
+    // Cell ID printed on front face using canvas texture
+    const idCanvas = document.createElement('canvas');
+    idCanvas.width = 64; idCanvas.height = 64;
+    const ctx = idCanvas.getContext('2d');
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(0, 0, 64, 64);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(obj.label, 32, 32);
+    const idTexture = new THREE.CanvasTexture(idCanvas);
+    const idMat = new THREE.MeshBasicMaterial({{ map: idTexture, transparent: true }});
+    const idPlane = new THREE.Mesh(new THREE.PlaneGeometry(obj.scale[0]*0.8, obj.scale[1]*0.35), idMat);
+    idPlane.position.set(obj.position[0], obj.position[1], obj.position[2] + obj.scale[2]/2 + 0.001);
+    scene.add(idPlane);
 
     // Edges
     const edges = new THREE.EdgesGeometry(geo, 20);
@@ -513,20 +531,29 @@ objects.forEach((obj, idx) => {{
     line.position.copy(mesh.position);
     scene.add(line);
 
-    // Terminal dots
-    const tGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.003, 8);
-    const tPos = new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({{ color: 0xcc0000, metalness: 0.8 }}));
-    tPos.position.set(obj.position[0]+obj.scale[0]*0.3, obj.position[1]+obj.scale[1]/2+0.002, obj.position[2]);
-    scene.add(tPos);
-    const tNeg = new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({{ color: 0x333333, metalness: 0.8 }}));
-    tNeg.position.set(obj.position[0]-obj.scale[0]*0.3, obj.position[1]+obj.scale[1]/2+0.002, obj.position[2]);
-    scene.add(tNeg);
+    // Terminal connectors on top (larger copper tabs)
+    const tabW = obj.scale[0] * 0.35;
+    const tabD = obj.scale[2] * 0.20;
+    const tabH = 0.008;
+    const tabGeo = new THREE.BoxGeometry(tabW, tabH, tabD);
+    const topY = obj.position[1] + obj.scale[1]/2 + tabH/2;
+
+    // Positive terminal (copper/red)
+    const posTab = new THREE.Mesh(tabGeo, new THREE.MeshPhysicalMaterial({{ color: 0xcc4444, roughness: 0.3, metalness: 0.8 }}));
+    posTab.position.set(obj.position[0] + obj.scale[0]*0.25, topY, obj.position[2]);
+    posTab.castShadow = true; scene.add(posTab);
+
+    // Negative terminal (dark)
+    const negTab = new THREE.Mesh(tabGeo, new THREE.MeshPhysicalMaterial({{ color: 0x333333, roughness: 0.3, metalness: 0.8 }}));
+    negTab.position.set(obj.position[0] - obj.scale[0]*0.25, topY, obj.position[2]);
+    negTab.castShadow = true; scene.add(negTab);
 
   }} else if (obj.type === 'tray') {{
+    // Main tray body
     const geo = new RoundedBoxGeometry(obj.scale[0], obj.scale[1], obj.scale[2], 2, 0.004);
     const mat = new THREE.MeshPhysicalMaterial({{
       color: 0x8a9196, roughness: 0.35, metalness: 0.15,
-      clearcoat: 0.2, transparent: true, opacity: 0.7,
+      clearcoat: 0.2,
     }});
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(...obj.position);
@@ -534,13 +561,48 @@ objects.forEach((obj, idx) => {{
     mesh.userData = {{ idx, ...obj }};
     scene.add(mesh); interactables.push(mesh);
 
+    // Raised tray lip/border (4 walls)
+    const lipH = 0.04;
+    const lipT = 0.008;
+    const lipMat = new THREE.MeshPhysicalMaterial({{ color: 0x6d7276, roughness: 0.4, metalness: 0.2 }});
+    const hw = obj.scale[0]/2;
+    const hd = obj.scale[2]/2;
+    const lipY = lipH/2;
+
+    // Front wall
+    const fw = new THREE.Mesh(new THREE.BoxGeometry(obj.scale[0], lipH, lipT), lipMat);
+    fw.position.set(obj.position[0], lipY, obj.position[2] + hd); scene.add(fw);
+    // Back wall
+    const bw = new THREE.Mesh(new THREE.BoxGeometry(obj.scale[0], lipH, lipT), lipMat);
+    bw.position.set(obj.position[0], lipY, obj.position[2] - hd); scene.add(bw);
+    // Left wall
+    const lw = new THREE.Mesh(new THREE.BoxGeometry(lipT, lipH, obj.scale[2]), lipMat);
+    lw.position.set(obj.position[0] - hw, lipY, obj.position[2]); scene.add(lw);
+    // Right wall
+    const rw = new THREE.Mesh(new THREE.BoxGeometry(lipT, lipH, obj.scale[2]), lipMat);
+    rw.position.set(obj.position[0] + hw, lipY, obj.position[2]); scene.add(rw);
+
+    // Divider walls between cell columns (based on cell positions)
+    const divMat = new THREE.MeshPhysicalMaterial({{ color: 0x7a7e82, roughness: 0.5, metalness: 0.1 }});
+    const cellPositionsX = [...new Set(cellObjs.map(c => c.position[0]))].sort((a,b) => a-b);
+    for (let i = 0; i < cellPositionsX.length - 1; i++) {{
+      const midX = (cellPositionsX[i] + cellPositionsX[i+1]) / 2;
+      const divider = new THREE.Mesh(new THREE.BoxGeometry(0.005, lipH * 0.8, obj.scale[2] * 0.9), divMat);
+      divider.position.set(midX, lipH * 0.4, obj.position[2]);
+      scene.add(divider);
+    }}
+    // Divider wall between rows
+    const cellPositionsZ = [...new Set(cellObjs.map(c => c.position[2]))].sort((a,b) => a-b);
+    if (cellPositionsZ.length > 1) {{
+      const midZ = (cellPositionsZ[0] + cellPositionsZ[cellPositionsZ.length-1]) / 2;
+      const rowDiv = new THREE.Mesh(new THREE.BoxGeometry(obj.scale[0] * 0.9, lipH * 0.8, 0.005), divMat);
+      rowDiv.position.set(obj.position[0], lipH * 0.4, midZ);
+      scene.add(rowDiv);
+    }}
+
     // Tray label
     const label = createLabel("2x3 Battery\\nTray", "desc");
     labelData.push({{ el: label, pos: new THREE.Vector3(obj.position[0]+0.35, obj.position[1]+0.02, obj.position[2]+0.25) }});
-
-    // Wireframe
-    const edges = new THREE.EdgesGeometry(geo, 15);
-    scene.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({{ color: 0x607D8B, opacity: 0.3, transparent: true }})).translateX(obj.position[0]).translateY(obj.position[1]).translateZ(obj.position[2]));
 
   }} else if (obj.type === 'robot') {{
     // ── Black square base pad ──
@@ -608,7 +670,6 @@ objects.forEach((obj, idx) => {{
 }});
 
 // ── White base frame under cells ──
-const cellObjs = objects.filter(o => o.type === 'cell');
 if (cellObjs.length) {{
   // Compute bounding box of all cells
   const minX = Math.min(...cellObjs.map(c => c.position[0] - c.scale[0]/2)) - 0.02;

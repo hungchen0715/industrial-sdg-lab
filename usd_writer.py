@@ -320,15 +320,15 @@ def Xform "World"
     def Cube "ModuleTray"
     {
         float3 xformOp:translate = (0.0, 0.0, -0.02)
-        float3 xformOp:scale = (0.60, 0.45, 0.02)
+        float3 xformOp:scale = (0.55, 0.42, 0.02)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.78, 0.80, 0.82)]
     }
 
     def Cube "Cell_01"
     {
-        float3 xformOp:translate = (-0.22, -0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (-0.18, -0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -338,8 +338,8 @@ def Xform "World"
 
     def Cube "Cell_02"
     {
-        float3 xformOp:translate = (0.0, -0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (0.0, -0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -349,8 +349,8 @@ def Xform "World"
 
     def Cube "Cell_03"
     {
-        float3 xformOp:translate = (0.22, -0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (0.18, -0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.13, 0.59, 0.95)]
@@ -360,8 +360,8 @@ def Xform "World"
 
     def Cube "Cell_04"
     {
-        float3 xformOp:translate = (-0.22, 0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (-0.18, 0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -371,8 +371,8 @@ def Xform "World"
 
     def Cube "Cell_05"
     {
-        float3 xformOp:translate = (0.0, 0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (0.0, 0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -382,8 +382,8 @@ def Xform "World"
 
     def Cube "Cell_06"
     {
-        float3 xformOp:translate = (0.22, 0.14, 0.10)
-        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float3 xformOp:translate = (0.18, 0.13, 0.15)
+        float3 xformOp:scale = (0.04, 0.10, 0.15)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(1.0, 0.60, 0.0)]
