@@ -3,14 +3,14 @@
     defaultPrim = "World"
     metersPerUnit = 1.0
     upAxis = "Z"
-    doc = "Sample battery module: 2x3 LG E63 cells with UR10e robot"
+    doc = "Sample battery module: 2x3 LG E63 prismatic cells with UR10e robot"
 )
 
 def Xform "World"
 {
     def DomeLight "AmbientLight"
     {
-        float inputs:intensity = 1000
+        float inputs:intensity = 1200
         color3f inputs:color = (1.0, 0.98, 0.95)
     }
 
@@ -32,16 +32,16 @@ def Xform "World"
 
     def Cube "ModuleTray"
     {
-        float3 xformOp:translate = (0.4, 0.3, -0.01)
-        float3 xformOp:scale = (0.4, 0.3, 0.01)
+        float3 xformOp:translate = (0.0, 0.0, -0.02)
+        float3 xformOp:scale = (0.60, 0.45, 0.02)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.78, 0.80, 0.82)]
     }
 
     def Cube "Cell_01"
     {
-        float3 xformOp:translate = (0.15, 0.15, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
+        float3 xformOp:translate = (-0.22, -0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -51,8 +51,8 @@ def Xform "World"
 
     def Cube "Cell_02"
     {
-        float3 xformOp:translate = (0.21, 0.15, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
+        float3 xformOp:translate = (0.0, -0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -62,19 +62,19 @@ def Xform "World"
 
     def Cube "Cell_03"
     {
-        float3 xformOp:translate = (0.27, 0.15, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
-        float xformOp:rotateY = 180.0
+        float3 xformOp:translate = (0.22, -0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
-        color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
-        custom string battery:cellType = "LG_E63"
+        color3f[] primvars:displayColor = [(0.13, 0.59, 0.95)]
+        custom string battery:cellType = "HY_50Ah"
         custom string battery:cellId = "Cell_03"
     }
 
     def Cube "Cell_04"
     {
-        float3 xformOp:translate = (0.15, 0.30, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
+        float3 xformOp:translate = (-0.22, 0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -84,8 +84,8 @@ def Xform "World"
 
     def Cube "Cell_05"
     {
-        float3 xformOp:translate = (0.21, 0.30, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
+        float3 xformOp:translate = (0.0, 0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
         float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
         color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
@@ -95,24 +95,24 @@ def Xform "World"
 
     def Cube "Cell_06"
     {
-        float3 xformOp:translate = (0.27, 0.30, 0.1)
-        float3 xformOp:scale = (0.025, 0.06, 0.1)
-        float xformOp:rotateY = 180.0
+        float3 xformOp:translate = (0.22, 0.14, 0.10)
+        float3 xformOp:scale = (0.05, 0.12, 0.10)
+        float xformOp:rotateY = 0.0
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
-        color3f[] primvars:displayColor = [(0.30, 0.69, 0.31)]
-        custom string battery:cellType = "LG_E63"
+        color3f[] primvars:displayColor = [(1.0, 0.60, 0.0)]
+        custom string battery:cellType = "CATL_LFP"
         custom string battery:cellId = "Cell_06"
     }
 
     def Xform "RobotArm_UR10e"
     {
-        float3 xformOp:translate = (0.0, 0.0, 0.0)
+        float3 xformOp:translate = (-0.80, 0.0, 0.0)
         uniform token[] xformOpOrder = ["xformOp:translate"]
 
         def Cylinder "Base"
         {
-            float3 xformOp:scale = (0.08, 0.08, 0.15)
-            float3 xformOp:translate = (0, 0, 0.075)
+            float3 xformOp:scale = (0.12, 0.12, 0.25)
+            float3 xformOp:translate = (0, 0, 0.125)
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
             color3f[] primvars:displayColor = [(0.85, 0.20, 0.15)]
         }
@@ -126,10 +126,10 @@ def Xform "World"
 
     def Camera "InspectionCamera"
     {
-        float3 xformOp:translate = (0.4, 0.3, 1.2)
+        float3 xformOp:translate = (0.0, 0.0, 1.5)
         uniform token[] xformOpOrder = ["xformOp:translate"]
         float focalLength = 35.0
         float horizontalAperture = 36
-        custom float3 camera:lookAt = (0.4, 0.3, 0.0)
+        custom float3 camera:lookAt = (0.0, 0.0, 0.0)
     }
 }
