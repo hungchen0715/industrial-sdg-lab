@@ -38,11 +38,16 @@ One 3D scene → automatically vary lighting/materials/camera/poses → N differ
 
 ## Demo Screenshots
 
-### 🧊 3D Viewport — Interactive Scene Preview
+### 🧊 Interactive 3D Viewport (in Gradio App)
 
-Drag to rotate, scroll to zoom:
+The Gradio app includes a **real-time 3D viewer** where you can drag to rotate and scroll to zoom.
+It renders cells, tray, robot base, and camera as colored geometry from the USDA scene data.
 
-![3D Demo](assets/demo_topdown.png)
+> Run `python app.py` and click **Generate & Export** → **3D Viewport** tab to try it.
+
+### 🗺️ Scene Layout — Top-Down View
+
+![Top-Down View](assets/demo_topdown.png)
 
 ### 📊 Randomization Distributions — Verify each domain varies
 
