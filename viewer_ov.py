@@ -42,6 +42,9 @@ def _parse_float3(value: str):
 def _extract_objects(usda_path: str) -> list[dict]:
     scene = parse_usda(usda_path)
     objects = []
+    # Track counts per type for G1,G2.../B1/O1 labels
+    type_counters = {"LG_E63": 0, "HY_50Ah": 0, "CATL_LFP": 0}
+    type_prefix = {"LG_E63": "G", "HY_50Ah": "B", "CATL_LFP": "O"}
     cells = find_prims_by_name(scene, r"Cell_\d+")
     for cell in cells:
         pos_attr = get_attribute(cell, "xformOp:translate")
@@ -52,7 +55,9 @@ def _extract_objects(usda_path: str) -> list[dict]:
         px, py, pz = _parse_float3(pos_attr.value)
         sx, sy, sz = _parse_float3(scale_attr.value)
         cell_type = type_attr.value.strip('"') if type_attr else "unknown"
-        short = cell.name.replace("Cell_0", "C")
+        type_counters[cell_type] = type_counters.get(cell_type, 0) + 1
+        prefix = type_prefix.get(cell_type, "C")
+        short = f"{prefix}{type_counters[cell_type]}"
         objects.append({
             "type": "cell", "name": cell.name, "label": short,
             "cellType": cell_type,
@@ -538,51 +543,37 @@ objects.forEach((obj, idx) => {{
     scene.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({{ color: 0x607D8B, opacity: 0.3, transparent: true }})).translateX(obj.position[0]).translateY(obj.position[1]).translateZ(obj.position[2]));
 
   }} else if (obj.type === 'robot') {{
-    // ── Full robot arm ──
+    // ── Black square base pad ──
+    const padMat = new THREE.MeshPhysicalMaterial({{ color: 0x222222, roughness: 0.6, metalness: 0.3 }});
+    const pad = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.04, 0.30), padMat);
+    pad.position.set(obj.position[0], 0.02, obj.position[2]);
+    pad.castShadow = true; pad.receiveShadow = true;
+    scene.add(pad);
+
+    // ── Red cylinder (robot base) ──
     const baseMat = new THREE.MeshPhysicalMaterial({{ color: obj.color, roughness: 0.15, metalness: 0.7, clearcoat: 0.6 }});
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 0.10, 32), baseMat);
-    base.position.set(obj.position[0], 0.05, obj.position[2]);
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.12, 0.30, 32), baseMat);
+    base.position.set(obj.position[0], 0.19, obj.position[2]);
     base.castShadow = true;
     base.userData = {{ idx, ...obj }};
     scene.add(base); interactables.push(base);
 
-    // Shoulder
-    const sMat = new THREE.MeshPhysicalMaterial({{ color: 0x555555, roughness: 0.2, metalness: 0.8 }});
-    const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.14, 24), sMat);
-    shoulder.position.set(obj.position[0], 0.17, obj.position[2]);
-    shoulder.castShadow = true; scene.add(shoulder);
-
-    // Upper arm
-    const armMat = new THREE.MeshPhysicalMaterial({{ color: obj.color, roughness: 0.2, metalness: 0.7, clearcoat: 0.5 }});
-    const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.045, 0.32, 16), armMat);
-    upper.position.set(obj.position[0], 0.40, obj.position[2]);
-    upper.castShadow = true; scene.add(upper);
-
-    // Elbow
-    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 20), baseMat.clone());
-    elbow.position.set(obj.position[0], 0.56, obj.position[2]);
-    elbow.castShadow = true; scene.add(elbow);
-
-    // Forearm
-    const forearm = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.04, 0.26, 14), sMat.clone());
-    forearm.position.set(obj.position[0]+0.12, 0.58, obj.position[2]);
-    forearm.rotation.z = -Math.PI / 5;
-    forearm.castShadow = true; scene.add(forearm);
-
-    // Wrist
-    const wrist = new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 16), sMat.clone());
-    wrist.position.set(obj.position[0]+0.25, 0.58, obj.position[2]);
-    wrist.castShadow = true; scene.add(wrist);
-
-    // Label
-    const robotLabel = createLabel("Robot\\n01");
-    labelData.push({{ el: robotLabel, pos: new THREE.Vector3(obj.position[0], 0.70, obj.position[2]) }});
+    // ── Red Robot Base label ──
+    const robotLabel = createLabel("Red Robot Base");
+    labelData.push({{ el: robotLabel, pos: new THREE.Vector3(obj.position[0]-0.15, 0.40, obj.position[2]) }});
     const descLabel = createLabel("KUKA\\nKR 10 R1100", "desc");
-    labelData.push({{ el: descLabel, pos: new THREE.Vector3(obj.position[0]-0.2, 0.30, obj.position[2]+0.15) }});
+    labelData.push({{ el: descLabel, pos: new THREE.Vector3(obj.position[0]-0.2, 0.15, obj.position[2]+0.15) }});
 
-    // Reach ring (pulsing)
-    const ringGeo = new THREE.RingGeometry(obj.reach - 0.02, obj.reach, 128);
-    const ringMat = new THREE.MeshBasicMaterial({{ color: 0xff3333, transparent: true, opacity: 0.10, side: THREE.DoubleSide }});
+    // Reach ring (pulsing, filled semi-transparent)
+    const ringFillGeo = new THREE.CircleGeometry(obj.reach, 128);
+    const ringFillMat = new THREE.MeshBasicMaterial({{ color: 0xff3333, transparent: true, opacity: 0.04, side: THREE.DoubleSide }});
+    const ringFill = new THREE.Mesh(ringFillGeo, ringFillMat);
+    ringFill.rotation.x = -Math.PI / 2; ringFill.position.set(obj.position[0], 0.002, obj.position[2]);
+    scene.add(ringFill);
+
+    // Reach ring outline
+    const ringGeo = new THREE.RingGeometry(obj.reach - 0.015, obj.reach, 128);
+    const ringMat = new THREE.MeshBasicMaterial({{ color: 0xff3333, transparent: true, opacity: 0.15, side: THREE.DoubleSide }});
     const ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = -Math.PI / 2; ring.position.set(obj.position[0], 0.003, obj.position[2]);
     ring.userData.pulse = true;
@@ -590,9 +581,7 @@ objects.forEach((obj, idx) => {{
 
     // Reach label
     const reachLabel = createLabel((obj.reach * 1000).toFixed(0) + " mm", "dim");
-    labelData.push({{ el: reachLabel, pos: new THREE.Vector3(obj.position[0]+obj.reach*0.6, 0.01, obj.position[2]+obj.reach*0.6) }});
-
-    // "Reach Envelope" label
+    labelData.push({{ el: reachLabel, pos: new THREE.Vector3(obj.position[0]+obj.reach*0.5, 0.01, obj.position[2]+obj.reach*0.5) }});
     const envLabel = createLabel("Reach Envelope", "desc");
     labelData.push({{ el: envLabel, pos: new THREE.Vector3(obj.position[0], 0.01, obj.position[2]+obj.reach*0.8) }});
 
@@ -616,6 +605,65 @@ objects.forEach((obj, idx) => {{
     fCone.position.set(obj.position[0], obj.position[1]-0.25, obj.position[2]);
     scene.add(fCone);
   }}
+}});
+
+// ── White base frame under cells ──
+const cellObjs = objects.filter(o => o.type === 'cell');
+if (cellObjs.length) {{
+  // Compute bounding box of all cells
+  const minX = Math.min(...cellObjs.map(c => c.position[0] - c.scale[0]/2)) - 0.02;
+  const maxX = Math.max(...cellObjs.map(c => c.position[0] + c.scale[0]/2)) + 0.02;
+  const minZ = Math.min(...cellObjs.map(c => c.position[2] - c.scale[2]/2)) - 0.02;
+  const maxZ = Math.max(...cellObjs.map(c => c.position[2] + c.scale[2]/2)) + 0.02;
+  const bw = maxX - minX;
+  const bd = maxZ - minZ;
+  const bcx = (minX + maxX) / 2;
+  const bcz = (minZ + maxZ) / 2;
+
+  // White base platform
+  const whiteMat = new THREE.MeshPhysicalMaterial({{ color: 0xeeeeee, roughness: 0.4, metalness: 0.05 }});
+  const whitePlat = new THREE.Mesh(new RoundedBoxGeometry(bw, 0.015, bd, 2, 0.003), whiteMat);
+  whitePlat.position.set(bcx, 0.008, bcz);
+  whitePlat.receiveShadow = true;
+  scene.add(whitePlat);
+
+  // Side rails (left & right)
+  const railMat = new THREE.MeshPhysicalMaterial({{ color: 0xdddddd, roughness: 0.35, metalness: 0.1 }});
+  const railH = 0.04;
+  const lRail = new THREE.Mesh(new THREE.BoxGeometry(0.008, railH, bd), railMat);
+  lRail.position.set(minX - 0.004, railH/2, bcz);
+  scene.add(lRail);
+  const rRail = new THREE.Mesh(new THREE.BoxGeometry(0.008, railH, bd), railMat);
+  rRail.position.set(maxX + 0.004, railH/2, bcz);
+  scene.add(rRail);
+}}
+
+// ── Bus bars (wires between cell tops) ──
+const wireMat = new THREE.MeshPhysicalMaterial({{ color: 0xcc6600, roughness: 0.4, metalness: 0.7 }});
+for (let i = 0; i < cellObjs.length - 1; i++) {{
+  const a = cellObjs[i], b = cellObjs[i+1];
+  // Only connect cells in same row (similar Z)
+  if (Math.abs(a.position[2] - b.position[2]) < 0.05) {{
+    const midX = (a.position[0] + b.position[0]) / 2;
+    const topY = a.position[1] + a.scale[1] / 2 + 0.005;
+    const dist = Math.abs(a.position[0] - b.position[0]);
+    const wire = new THREE.Mesh(new THREE.BoxGeometry(dist, 0.004, 0.015), wireMat);
+    wire.position.set(midX, topY, a.position[2]);
+    wire.castShadow = true;
+    scene.add(wire);
+  }}
+}}
+
+// ── Welding spots on cell tops ──
+const weldMat = new THREE.MeshStandardMaterial({{ color: 0xaaaaaa, roughness: 0.2, metalness: 0.9 }});
+const weldGeo = new THREE.CylinderGeometry(0.004, 0.004, 0.002, 8);
+cellObjs.forEach(c => {{
+  const topY = c.position[1] + c.scale[1] / 2 + 0.002;
+  [-0.25, 0.25].forEach(xOff => {{
+    const w = new THREE.Mesh(weldGeo, weldMat);
+    w.position.set(c.position[0] + c.scale[0] * xOff, topY, c.position[2]);
+    scene.add(w);
+  }});
 }});
 
 // Description labels for cell types
