@@ -13,6 +13,14 @@ computer vision models for manufacturing quality inspection.
 - **COCO dataset export** — ready for YOLOv8 / Detectron2 / MMDetection
 - **Distribution visualization** — see exactly what was randomized
 
+### Randomization Distribution Preview
+
+![Distributions](assets/preview_distributions.png)
+
+### Scene Top-Down View (single variant)
+
+![Topdown](assets/preview_topdown.png)
+
 ---
 
 ## Part of the Industrial AI Toolchain
@@ -155,9 +163,14 @@ industrial-sdg-lab/
 ├── randomizer.py       — Domain Randomization engine (4 domains)
 ├── dataset_export.py   — COCO-format annotation exporter
 ├── preview.py          — Randomization distribution visualization
-├── sample_scenes/      — Example USD scenes
-├── assets/             — Architecture diagram
+├── test_pipeline.py    — Integration tests (30 checks)
+├── sample_scenes/      — Example USD scenes (.usda)
+├── sample_outputs/     — Pre-generated COCO annotations + manifest
+├── examples/           — Usage examples
+│   └── basic_randomization.py
+├── assets/             — Architecture diagram + preview images
 ├── requirements.txt
+├── LICENSE             — MIT
 └── .gitignore
 ```
 

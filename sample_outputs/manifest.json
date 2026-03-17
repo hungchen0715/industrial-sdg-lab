@@ -1,0 +1,498 @@
+{
+  "created": "2026-03-17 00:09",
+  "total_variants": 3,
+  "variants": [
+    {
+      "id": 0,
+      "scene_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0000.usda",
+      "randomization": {
+        "lighting": {
+          "AmbientLight": {
+            "intensity": 2098.6,
+            "color": [
+              0.854,
+              0.855,
+              0.806
+            ]
+          },
+          "KeyLight": {
+            "intensity": 2341.2,
+            "color": [
+              0.952,
+              0.978,
+              0.772
+            ]
+          }
+        },
+        "materials": {
+          "Cell_01": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.31,
+              0.505,
+              0.3
+            ]
+          },
+          "Cell_02": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.295,
+              0.496,
+              0.302
+            ]
+          },
+          "Cell_03": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.212,
+              0.505,
+              0.262
+            ]
+          },
+          "Cell_04": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.137,
+              0.417,
+              0.169
+            ]
+          },
+          "Cell_05": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.204,
+              0.555,
+              0.316
+            ]
+          },
+          "Cell_06": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.276,
+              0.553,
+              0.155
+            ]
+          }
+        },
+        "camera": {
+          "position": {
+            "original": [
+              0.4,
+              0.3,
+              1.2
+            ],
+            "randomized": [
+              0.3185,
+              0.2193,
+              1.2347
+            ]
+          },
+          "fov": 65.1,
+          "focal_length": 28.2
+        },
+        "object_poses": {
+          "Cell_01": {
+            "position_delta": [
+              0.00184,
+              0.00138,
+              0
+            ],
+            "rotation_delta": 0.14
+          },
+          "Cell_02": {
+            "position_delta": [
+              0.00284,
+              -0.00073,
+              0
+            ],
+            "rotation_delta": 0.21
+          },
+          "Cell_03": {
+            "position_delta": [
+              0.00198,
+              0.00071,
+              0
+            ],
+            "rotation_delta": 1.45
+          },
+          "Cell_04": {
+            "position_delta": [
+              0.00046,
+              0.00123,
+              0
+            ],
+            "rotation_delta": -1.82
+          },
+          "Cell_05": {
+            "position_delta": [
+              -0.00163,
+              -0.00126,
+              0
+            ],
+            "rotation_delta": -1.68
+          },
+          "Cell_06": {
+            "position_delta": [
+              -0.0016,
+              -0.00239,
+              0
+            ],
+            "rotation_delta": -0.89
+          }
+        }
+      }
+    },
+    {
+      "id": 1,
+      "scene_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0001.usda",
+      "randomization": {
+        "lighting": {
+          "AmbientLight": {
+            "intensity": 2089.2,
+            "color": [
+              0.905,
+              0.874,
+              0.802
+            ]
+          },
+          "KeyLight": {
+            "intensity": 1167.4,
+            "color": [
+              0.99,
+              0.93,
+              0.902
+            ]
+          }
+        },
+        "materials": {
+          "Cell_01": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.262,
+              0.482,
+              0.172
+            ]
+          },
+          "Cell_02": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.227,
+              0.679,
+              0.182
+            ]
+          },
+          "Cell_03": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.284,
+              0.763,
+              0.322
+            ]
+          },
+          "Cell_04": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.225,
+              0.427,
+              0.284
+            ]
+          },
+          "Cell_05": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.294,
+              0.501,
+              0.257
+            ]
+          },
+          "Cell_06": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.167,
+              0.544,
+              0.337
+            ]
+          }
+        },
+        "camera": {
+          "position": {
+            "original": [
+              0.4,
+              0.3,
+              1.2
+            ],
+            "randomized": [
+              0.4311,
+              0.2791,
+              1.2415
+            ]
+          },
+          "fov": 61.5,
+          "focal_length": 30.27
+        },
+        "object_poses": {
+          "Cell_01": {
+            "position_delta": [
+              -0.00141,
+              -0.00152,
+              0
+            ],
+            "rotation_delta": 0.25
+          },
+          "Cell_02": {
+            "position_delta": [
+              -0.00142,
+              0.00051,
+              0
+            ],
+            "rotation_delta": 1.59
+          },
+          "Cell_03": {
+            "position_delta": [
+              -0.0006,
+              -0.00168,
+              0
+            ],
+            "rotation_delta": 1.99
+          },
+          "Cell_04": {
+            "position_delta": [
+              6e-05,
+              -0.00245,
+              0
+            ],
+            "rotation_delta": -1.81
+          },
+          "Cell_05": {
+            "position_delta": [
+              -0.00234,
+              0.00076,
+              0
+            ],
+            "rotation_delta": 1.17
+          },
+          "Cell_06": {
+            "position_delta": [
+              -0.00047,
+              -0.00262,
+              0
+            ],
+            "rotation_delta": -0.47
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "scene_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0002.usda",
+      "randomization": {
+        "lighting": {
+          "AmbientLight": {
+            "intensity": 2990.3,
+            "color": [
+              0.929,
+              0.994,
+              0.965
+            ]
+          },
+          "KeyLight": {
+            "intensity": 528.7,
+            "color": [
+              0.958,
+              0.936,
+              0.884
+            ]
+          }
+        },
+        "materials": {
+          "Cell_01": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.234,
+              0.46,
+              0.178
+            ]
+          },
+          "Cell_02": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.381,
+              0.809,
+              0.364
+            ]
+          },
+          "Cell_03": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.32,
+              0.621,
+              0.436
+            ]
+          },
+          "Cell_04": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.383,
+              0.774,
+              0.228
+            ]
+          },
+          "Cell_05": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.327,
+              0.666,
+              0.258
+            ]
+          },
+          "Cell_06": {
+            "original": [
+              0.3,
+              0.69,
+              0.31
+            ],
+            "randomized": [
+              0.349,
+              0.637,
+              0.22
+            ]
+          }
+        },
+        "camera": {
+          "position": {
+            "original": [
+              0.4,
+              0.3,
+              1.2
+            ],
+            "randomized": [
+              0.4557,
+              0.3061,
+              1.1501
+            ]
+          },
+          "fov": 58.1,
+          "focal_length": 32.4
+        },
+        "object_poses": {
+          "Cell_01": {
+            "position_delta": [
+              -0.00288,
+              0.00257,
+              0
+            ],
+            "rotation_delta": 1.51
+          },
+          "Cell_02": {
+            "position_delta": [
+              0.00199,
+              -0.00115,
+              0
+            ],
+            "rotation_delta": -1.77
+          },
+          "Cell_03": {
+            "position_delta": [
+              0.00227,
+              0.00268,
+              0
+            ],
+            "rotation_delta": -1.66
+          },
+          "Cell_04": {
+            "position_delta": [
+              -8e-05,
+              -0.00258,
+              0
+            ],
+            "rotation_delta": 1.04
+          },
+          "Cell_05": {
+            "position_delta": [
+              0.0016,
+              -0.00223,
+              0
+            ],
+            "rotation_delta": -0.1
+          },
+          "Cell_06": {
+            "position_delta": [
+              0.0003,
+              -0.00141,
+              0
+            ],
+            "rotation_delta": 1.49
+          }
+        }
+      }
+    }
+  ]
+}

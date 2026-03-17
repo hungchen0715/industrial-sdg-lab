@@ -1,0 +1,345 @@
+{
+  "info": {
+    "description": "Industrial Battery Module Assembly — Synthetic Dataset",
+    "version": "1.0",
+    "contributor": "industrial-sdg-lab",
+    "date_created": "2026-03-17 00:09"
+  },
+  "licenses": [],
+  "categories": [
+    {
+      "id": 1,
+      "name": "battery_cell",
+      "supercategory": "component"
+    },
+    {
+      "id": 2,
+      "name": "robot_arm",
+      "supercategory": "equipment"
+    },
+    {
+      "id": 3,
+      "name": "module_tray",
+      "supercategory": "fixture"
+    }
+  ],
+  "images": [
+    {
+      "id": 1,
+      "file_name": "variant_0000.png",
+      "width": 1024,
+      "height": 768,
+      "usda_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0000.usda"
+    },
+    {
+      "id": 2,
+      "file_name": "variant_0001.png",
+      "width": 1024,
+      "height": 768,
+      "usda_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0001.usda"
+    },
+    {
+      "id": 3,
+      "file_name": "variant_0002.png",
+      "width": 1024,
+      "height": 768,
+      "usda_path": "C:\\Users\\hsad\\Downloads\\AI_Tinker_industrial-sdg-lab\\sample_outputs\\scenes\\variant_0002.usda"
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        444.6,
+        534.9,
+        35.6,
+        87.9
+      ],
+      "area": 3129.2,
+      "iscrowd": 0,
+      "object_name": "Cell_01"
+    },
+    {
+      "id": 2,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        476.6,
+        504.7,
+        35.8,
+        87.3
+      ],
+      "area": 3125.3,
+      "iscrowd": 0,
+      "object_name": "Cell_02"
+    },
+    {
+      "id": 3,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        505.6,
+        473.8,
+        35.9,
+        86.7
+      ],
+      "area": 3112.5,
+      "iscrowd": 0,
+      "object_name": "Cell_03"
+    },
+    {
+      "id": 4,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        368.9,
+        459.8,
+        34.5,
+        86.4
+      ],
+      "area": 2980.8,
+      "iscrowd": 0,
+      "object_name": "Cell_04"
+    },
+    {
+      "id": 5,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        399.5,
+        431.8,
+        34.7,
+        85.9
+      ],
+      "area": 2980.7,
+      "iscrowd": 0,
+      "object_name": "Cell_05"
+    },
+    {
+      "id": 6,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        430.2,
+        402.2,
+        34.9,
+        85.3
+      ],
+      "area": 2977.0,
+      "iscrowd": 0,
+      "object_name": "Cell_06"
+    },
+    {
+      "id": 7,
+      "image_id": 1,
+      "category_id": 3,
+      "bbox": [
+        466.5,
+        79.3,
+        87.7,
+        633.9
+      ],
+      "area": 55593.0,
+      "iscrowd": 0,
+      "object_name": "ModuleTray"
+    },
+    {
+      "id": 8,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        264.1,
+        279.0,
+        95.9,
+        19.0
+      ],
+      "area": 1822.1,
+      "iscrowd": 0,
+      "object_name": "Cell_01"
+    },
+    {
+      "id": 9,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        290.3,
+        315.4,
+        96.0,
+        19.1
+      ],
+      "area": 1833.6,
+      "iscrowd": 0,
+      "object_name": "Cell_02"
+    },
+    {
+      "id": 10,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        314.2,
+        354.2,
+        96.2,
+        19.1
+      ],
+      "area": 1837.4,
+      "iscrowd": 0,
+      "object_name": "Cell_03"
+    },
+    {
+      "id": 11,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        358.1,
+        217.8,
+        95.7,
+        19.0
+      ],
+      "area": 1818.3,
+      "iscrowd": 0,
+      "object_name": "Cell_04"
+    },
+    {
+      "id": 12,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        384.0,
+        252.1,
+        95.8,
+        19.0
+      ],
+      "area": 1820.2,
+      "iscrowd": 0,
+      "object_name": "Cell_05"
+    },
+    {
+      "id": 13,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        407.7,
+        291.9,
+        95.9,
+        19.1
+      ],
+      "area": 1831.7,
+      "iscrowd": 0,
+      "object_name": "Cell_06"
+    },
+    {
+      "id": 14,
+      "image_id": 2,
+      "category_id": 3,
+      "bbox": [
+        188.6,
+        271.5,
+        649.3,
+        226.4
+      ],
+      "area": 147001.5,
+      "iscrowd": 0,
+      "object_name": "ModuleTray"
+    },
+    {
+      "id": 15,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        359.9,
+        121.8,
+        98.3,
+        53.6
+      ],
+      "area": 5268.9,
+      "iscrowd": 0,
+      "object_name": "Cell_01"
+    },
+    {
+      "id": 16,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        350.1,
+        176.5,
+        98.5,
+        53.9
+      ],
+      "area": 5309.1,
+      "iscrowd": 0,
+      "object_name": "Cell_02"
+    },
+    {
+      "id": 17,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        347.3,
+        228.3,
+        98.8,
+        54.2
+      ],
+      "area": 5355.0,
+      "iscrowd": 0,
+      "object_name": "Cell_03"
+    },
+    {
+      "id": 18,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        484.1,
+        137.6,
+        98.7,
+        53.7
+      ],
+      "area": 5300.2,
+      "iscrowd": 0,
+      "object_name": "Cell_04"
+    },
+    {
+      "id": 19,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        478.5,
+        190.1,
+        99.0,
+        54.0
+      ],
+      "area": 5346.0,
+      "iscrowd": 0,
+      "object_name": "Cell_05"
+    },
+    {
+      "id": 20,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        473.5,
+        240.3,
+        99.2,
+        54.3
+      ],
+      "area": 5386.6,
+      "iscrowd": 0,
+      "object_name": "Cell_06"
+    },
+    {
+      "id": 21,
+      "image_id": 3,
+      "category_id": 3,
+      "bbox": [
+        313.5,
+        49.4,
+        404.3,
+        682.3
+      ],
+      "area": 275853.9,
+      "iscrowd": 0,
+      "object_name": "ModuleTray"
+    }
+  ]
+}
