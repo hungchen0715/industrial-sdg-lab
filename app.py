@@ -18,7 +18,7 @@ from usd_writer import create_sample_battery_scene, parse_usda
 from randomizer import generate_variants
 from dataset_export import export_coco_dataset, create_dataset_manifest
 from preview import render_comparison, render_multi_variant_grid, render_lighting_comparison, render_scene_topdown
-from viewer_3d import generate_viewport_html
+from viewer_3d import usda_to_glb
 
 
 def ensure_sample_scene() -> str:
@@ -189,12 +189,12 @@ def process(
     except Exception as e:
         log_lines.append(f"  Topdown view failed: {e}")
 
-    # 5e: 3D viewport
-    viewport_html = ""
+    # 5e: 3D viewport (GLB)
+    glb_path = None
     try:
         if variants:
-            viewport_html = generate_viewport_html(variants[0].scene_path, height=500)
-            log_lines.append(f"  3D viewport: OK")
+            glb_path = usda_to_glb(variants[0].scene_path, "outputs/scene_variant0.glb")
+            log_lines.append(f"  3D viewport GLB: OK")
     except Exception as e:
         log_lines.append(f"  3D viewport failed: {e}")
 
@@ -238,7 +238,7 @@ def process(
     return (
         summary,                # summary_output
         coco_json_str,          # coco_output
-        viewport_html,          # viewport_output
+        glb_path,               # viewport_output
         comparison_path,        # dist_output
         grid_path,              # grid_output
         lighting_path,          # lighting_output
@@ -321,8 +321,9 @@ with gr.Blocks(
     with gr.Tabs():
         with gr.Tab("🧊 3D Viewport"):
             gr.Markdown("*Interactive 3D view — drag to rotate, scroll to zoom*")
-            viewport_output = gr.HTML(
-                label="3D Scene Viewport",
+            viewport_output = gr.Model3D(
+                label="Scene 3D View",
+                clear_color=[0.1, 0.1, 0.15, 1.0],
             )
 
         with gr.Tab("📊 Parameter Distributions"):
