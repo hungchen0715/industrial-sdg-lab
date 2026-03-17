@@ -18,7 +18,7 @@ from usd_writer import create_sample_battery_scene, parse_usda
 from randomizer import generate_variants
 from dataset_export import export_coco_dataset, create_dataset_manifest
 from preview import render_comparison, render_multi_variant_grid, render_lighting_comparison, render_scene_topdown
-from viewer_3d import usda_to_glb
+from viewer_3d import get_viewer_iframe
 
 
 def ensure_sample_scene() -> str:
@@ -189,12 +189,12 @@ def process(
     except Exception as e:
         log_lines.append(f"  Topdown view failed: {e}")
 
-    # 5e: 3D viewport (GLB)
-    glb_path = None
+    # 5e: 3D viewport (Three.js iframe)
+    viewport_html = ""
     try:
         if variants:
-            glb_path = usda_to_glb(variants[0].scene_path, "outputs/scene_variant0.glb")
-            log_lines.append(f"  3D viewport GLB: OK")
+            viewport_html = get_viewer_iframe(variants[0].scene_path, height=550)
+            log_lines.append(f"  3D viewport: OK (port 7863)")
     except Exception as e:
         log_lines.append(f"  3D viewport failed: {e}")
 
@@ -238,7 +238,7 @@ def process(
     return (
         summary,                # summary_output
         coco_json_str,          # coco_output
-        glb_path,               # viewport_output
+        viewport_html,          # viewport_output
         comparison_path,        # dist_output
         grid_path,              # grid_output
         lighting_path,          # lighting_output
@@ -320,10 +320,9 @@ with gr.Blocks(
     # ── Visual Outputs in Tabs ──
     with gr.Tabs():
         with gr.Tab("🧊 3D Viewport"):
-            gr.Markdown("*Interactive 3D view — drag to rotate, scroll to zoom*")
-            viewport_output = gr.Model3D(
-                label="Scene 3D View",
-                clear_color=[0.1, 0.1, 0.15, 1.0],
+            gr.Markdown("*Interactive Three.js scene — drag to rotate, scroll to zoom, hover for info*")
+            viewport_output = gr.HTML(
+                label="3D Scene Viewport",
             )
 
         with gr.Tab("📊 Parameter Distributions"):
